@@ -45,6 +45,9 @@ def countHops(m, n, pr, pc, a, b, br, bc):
     starts = (a, b)
     squash = (br, bc)
 
+    # Find the largest jumping length
+    large = max([pr, pc])
+
     # Store the value of the lowest row and column - can be updated for efficiency
     low_row, low_col = 0, 0
 
@@ -53,10 +56,11 @@ def countHops(m, n, pr, pc, a, b, br, bc):
     movement_options = [(-pc, -pr), (-pc, +pr), (+pc, -pr),
                         (+pc, +pr), (-pr, -pc), (-pr, +pc), (+pr, -pc), (+pr, +pc)]
 
-    # Check for the Squash in respective to the Rabbits location
-    if a < br:
+    # Check for the Squash in respective to the Rabbits location...
+    # ... and to see if it's not nearby.
+    if a < br and (br-a) > large:
         """
-            If the starting row is less than the Squash's row; 
+            If the starting row is less than the Squash's row;
             Meaning, the Squash is 'below' the Rabbit on the grid.
         """
 
@@ -65,21 +69,21 @@ def countHops(m, n, pr, pc, a, b, br, bc):
 
         if b < bc:
             """
-                If the starting column is less than the Squash's column; 
+                If the starting column is less than the Squash's column;
                 Meaning, the Squash is on the 'right' of the Rabbit on the grid.
             """
             low_col = b  # Update, and don't check 'jump' locations on the left of the Rabbit
 
         elif b > bc:
             """
-                If the starting column is greater than the Squash's column; 
+                If the starting column is greater than the Squash's column;
                 Meaning, the Squash is on the 'left' of the Rabbit on the grid.
             """
             n = b  # Update, and don't check 'jump' locations on the right of the Rabbit
 
-    elif a > br:
+    elif a > br and (a-br) > large:
         """
-            If the starting row is greater than the Squash's row; 
+            If the starting row is greater than the Squash's row;
             Meaning, the Squash is 'above' the Rabbit on the grid.
         """
 
@@ -93,10 +97,10 @@ def countHops(m, n, pr, pc, a, b, br, bc):
             n = b
     else:
 
-        if b < bc:
+        if b < bc and (bc-b) > large:
             low_col = b
 
-        elif b > bc:
+        elif b > bc and (b-bc) > large:
             n = b
 
     # Gets the next possible moves from the starting location
